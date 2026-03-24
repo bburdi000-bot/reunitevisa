@@ -168,9 +168,45 @@
     </footer>
 
     <script>
-        document.getElementById('checklist-form').addEventListener('submit', function(e) {
+        document.getElementById('checklist-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // TODO: Replace with Brevo API integration
+            const firstName = document.getElementById('firstName').value;
+            const email = document.getElementById('email').value;
+            const country = document.getElementById('country').value;
+
+            try {
+                // Add contact to Brevo list
+                await fetch('https://api.brevo.com/v3/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'api-key': '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',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        attributes: { FIRSTNAME: firstName, COUNTRY: country },
+                        listIds: [3],
+                        updateEnabled: true
+                    })
+                });
+
+                // Send welcome email
+                await fetch('https://api.brevo.com/v3/smtp/email', {
+                    method: 'POST',
+                    headers: {
+                        'api-key': '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',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        templateId: 1,
+                        to: [{ email: email, name: firstName }],
+                        params: { FIRSTNAME: firstName }
+                    })
+                });
+            } catch (err) {
+                console.error('Brevo error:', err);
+            }
+
             document.getElementById('checklist-form').classList.add('hidden');
             document.getElementById('success-msg').classList.remove('hidden');
         });

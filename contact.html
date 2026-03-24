@@ -171,9 +171,50 @@
     </footer>
 
     <script>
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // TODO: Replace with actual form submission (Google Forms, Brevo, etc.)
+            const form = e.target;
+            const inputs = form.querySelectorAll('input, select, textarea');
+            const data = {};
+            inputs.forEach(input => { if (input.value) data[input.name || input.id || 'field'] = input.value; });
+
+            const firstName = form.querySelector('input[placeholder="First name"]').value;
+            const email = form.querySelector('input[type="email"]').value;
+
+            try {
+                // Add to Consultation Requests list
+                await fetch('https://api.brevo.com/v3/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'api-key': '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',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        attributes: { FIRSTNAME: firstName },
+                        listIds: [4],
+                        updateEnabled: true
+                    })
+                });
+
+                // Send notification to Brandon
+                await fetch('https://api.brevo.com/v3/smtp/email', {
+                    method: 'POST',
+                    headers: {
+                        'api-key': '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',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sender: { name: 'ReuniteVisa', email: 'bburdi000@gmail.com' },
+                        to: [{ email: 'brandon@marginsignalos.com', name: 'Brandon' }],
+                        subject: 'New Consultation Request - ReuniteVisa',
+                        htmlContent: '<h2>New Lead</h2><p>Name: ' + firstName + '</p><p>Email: ' + email + '</p><pre>' + JSON.stringify(data, null, 2) + '</pre>'
+                    })
+                });
+            } catch (err) {
+                console.error('Brevo error:', err);
+            }
+
             document.getElementById('contact-form').classList.add('hidden');
             document.getElementById('contact-success').classList.remove('hidden');
         });
