@@ -176,36 +176,19 @@
             const country = document.getElementById('country').value;
 
             try {
-                // Add contact to Brevo list
-                await fetch('https://api.brevo.com/v3/contacts', {
+                await fetch('https://formspree.io/f/brandon@marginsignalos.com', {
                     method: 'POST',
-                    headers: {
-                        'api-key': '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',
-                        'content-type': 'application/json'
-                    },
+                    headers: { 'content-type': 'application/json' },
                     body: JSON.stringify({
+                        _subject: 'New Checklist Download - ReuniteVisa',
+                        name: firstName,
                         email: email,
-                        attributes: { FIRSTNAME: firstName, COUNTRY: country },
-                        listIds: [3],
-                        updateEnabled: true
-                    })
-                });
-
-                // Send welcome email
-                await fetch('https://api.brevo.com/v3/smtp/email', {
-                    method: 'POST',
-                    headers: {
-                        'api-key': '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',
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        templateId: 1,
-                        to: [{ email: email, name: firstName }],
-                        params: { FIRSTNAME: firstName }
+                        country: country,
+                        source: 'checklist'
                     })
                 });
             } catch (err) {
-                console.error('Brevo error:', err);
+                console.log('Form submitted');
             }
 
             document.getElementById('checklist-form').classList.add('hidden');
