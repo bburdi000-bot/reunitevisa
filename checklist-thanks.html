@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Your Email! — ReuniteVisa</title>
+    <meta name="description" content="Your K-1 Visa Document Checklist is on its way. Check your inbox.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+                        accent: { 500: '#f59e0b', 600: '#d97706' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-hero { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="/" class="text-xl font-bold text-brand-700">ReuniteVisa</a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+                <a href="/services.html" class="hover:text-brand-600 transition">For Couples</a>
+                <a href="/for-law-firms.html" class="hover:text-brand-600 transition">For Law Firms</a>
+                <a href="/blog/" class="hover:text-brand-600 transition">Blog</a>
+                <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition">Free Consultation</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+            <a href="/services.html" class="block py-2 text-gray-600 hover:text-brand-600">For Couples</a>
+            <a href="/for-law-firms.html" class="block py-2 text-gray-600 hover:text-brand-600">For Law Firms</a>
+            <a href="/blog/" class="block py-2 text-gray-600 hover:text-brand-600">Blog</a>
+            <a href="/contact.html" class="block py-2 mt-2 bg-brand-600 text-white text-center rounded-lg">Free Consultation</a>
+        </div>
+    </nav>
+
+    <!-- Thank You Content -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-2xl mx-auto px-4 text-center">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-8">&#10003;</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Check Your Email!</h1>
+            <p class="text-lg text-gray-600 mb-8">
+                Your K-1 Visa Document Checklist is on its way. Check your inbox (and spam folder). While you wait, check out our K-1 Visa Guide.
+            </p>
+            <a href="/blog/" class="inline-block bg-brand-600 text-white font-semibold px-8 py-4 rounded-xl text-lg hover:bg-brand-700 transition">
+                Read the K-1 Visa Guide &rarr;
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="text-white font-bold text-lg mb-4">ReuniteVisa</div>
+                    <p class="text-sm">Professional K-1 visa document preparation. Helping couples navigate immigration with clarity and confidence.</p>
+                </div>
+                <div>
+                    <div class="text-white font-semibold mb-4">Services</div>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/services.html" class="hover:text-white transition">K-1 Visa Package</a></li>
+                        <li><a href="/services.html#aos" class="hover:text-white transition">Adjustment of Status</a></li>
+                        <li><a href="/services.html#coaching" class="hover:text-white transition">Interview Coaching</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-white font-semibold mb-4">Resources</div>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog/" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="/checklist.html" class="hover:text-white transition">Document Checklist</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-white font-semibold mb-4">Contact</div>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/contact.html" class="hover:text-white transition">Free Consultation</a></li>
+                        <li>Mon-Sat 9am-7pm EST</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-xs text-gray-500">
+                <p class="mb-2">ReuniteVisa provides document preparation services and is not a law firm. We do not provide legal advice. All petitions are reviewed by an independent licensed immigration attorney.</p>
+                <p>&copy; 2026 ReuniteVisa. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile menu toggle -->
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

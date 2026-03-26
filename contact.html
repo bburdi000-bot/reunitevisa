@@ -90,8 +90,11 @@
                 <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-lg">
                     <h2 class="text-xl font-bold mb-6 text-center">Book Your Free Consultation</h2>
 
-                    <!-- Replace with Calendly embed or Google Form when ready -->
-                    <form id="contact-form" class="space-y-4">
+                    <form id="contact-form" action="https://formsubmit.co/brandon@marginsignalos.com" method="POST" class="space-y-4">
+                        <input type="hidden" name="_subject" value="New Consultation Request - ReuniteVisa">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://bburdi000-bot.github.io/reunitevisa/contact-thanks.html">
+                        <input type="text" name="_honey" style="display:none">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
@@ -171,36 +174,6 @@
         </div>
     </footer>
 
-    <script>
-        document.getElementById('contact-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const form = e.target;
-            const inputs = form.querySelectorAll('input, select, textarea');
-            const data = {};
-            inputs.forEach(input => { if (input.value) data[input.name || input.id || 'field'] = input.value; });
-
-            const firstName = form.querySelector('input[placeholder="First name"]').value;
-            const email = form.querySelector('input[type="email"]').value;
-
-            try {
-                await fetch('https://formspree.io/f/brandon@marginsignalos.com', {
-                    method: 'POST',
-                    headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({
-                        _subject: 'New Consultation Request - ReuniteVisa',
-                        name: firstName,
-                        email: email,
-                        ...data,
-                        source: 'consultation'
-                    })
-                });
-            } catch (err) {
-                console.log('Form submitted');
-            }
-
-            document.getElementById('contact-form').classList.add('hidden');
-            document.getElementById('contact-success').classList.remove('hidden');
-        });
-    </script>
+    <!-- Form submits via FormSubmit.co to brandon@marginsignalos.com -->
 </body>
 </html>
