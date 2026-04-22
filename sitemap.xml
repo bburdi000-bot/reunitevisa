@@ -13,16 +13,22 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bburdi000-bot.github.io/reunitevisa/for-law-firms.html</loc>
-    <lastmod>2026-03-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://bburdi000-bot.github.io/reunitevisa/products.html</loc>
     <lastmod>2026-03-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bburdi000-bot.github.io/reunitevisa/filing-system.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://bburdi000-bot.github.io/reunitevisa/update-pass.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://bburdi000-bot.github.io/reunitevisa/blog/</loc>
