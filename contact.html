@@ -18,6 +18,7 @@
         .gradient-hero { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); }
         .gradient-cta { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     </style>
+    <script src="/assets/funnel.js" defer></script>
 </head>
 <body class="bg-white text-gray-900 antialiased">
 
@@ -92,7 +93,7 @@
                     <h2 class="text-xl font-bold mb-2 text-center">Request Your Free Consultation</h2>
                     <p class="text-sm text-gray-500 text-center mb-6">Use this form for higher-touch help. For self-serve support, start with the <a href="/checklist.html" class="text-brand-600 underline">free checklist</a>.</p>
 
-                    <form id="contact-form" action="https://formsubmit.co/brandon@marginsignalos.com" method="POST" class="space-y-4">
+                    <form id="contact-form" data-form-type="contact" action="https://formsubmit.co/brandon@marginsignalos.com" method="POST" class="space-y-4">
                         <input type="hidden" name="_subject" value="New Consultation Request - ReuniteVisa">
                         <input type="hidden" name="_captcha" value="false">
                         <input type="hidden" name="_next" value="https://bburdi000-bot.github.io/reunitevisa/contact-thanks.html">

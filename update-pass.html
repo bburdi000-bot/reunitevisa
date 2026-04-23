@@ -19,6 +19,7 @@
         .gradient-hero { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); }
         .gradient-cta { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     </style>
+    <script src="/assets/funnel.js" defer></script>
 </head>
 <body class="bg-white text-gray-900 antialiased">
 
@@ -68,7 +69,7 @@
             <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-lg">
                 <h2 class="text-2xl font-bold mb-2 text-center">Join The Waitlist</h2>
                 <p class="text-sm text-gray-500 text-center mb-6">Tell us where you are in the process so the first version of the Update Pass is built around real needs.</p>
-                <form action="https://formsubmit.co/brandon@marginsignalos.com" method="POST" class="space-y-4">
+                <form id="update-pass-form" data-form-type="update_pass_waitlist" action="https://formsubmit.co/brandon@marginsignalos.com" method="POST" class="space-y-4">
                     <input type="hidden" name="_subject" value="ReuniteVisa Update Pass Waitlist">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_next" value="https://bburdi000-bot.github.io/reunitevisa/update-pass-thanks.html">
