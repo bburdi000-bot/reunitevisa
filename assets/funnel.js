@@ -243,7 +243,13 @@
         const campaignPart = sanitizeReferencePart(attribution.first_touch && attribution.first_touch.campaign, "site");
         const pagePart = sanitizeReferencePart(window.location.pathname.replace(/\//g, "_"), "page");
 
-        return [visitorPart, productSlug, sourcePart, campaignPart, pagePart].join("_").slice(0, 200);
+        return [
+            `v_${visitorPart}`,
+            `p_${productSlug}`,
+            `s_${sourcePart}`,
+            `c_${campaignPart}`,
+            `l_${pagePart}`,
+        ].join("__").slice(0, 200);
     }
 
     function rewriteStripeLink(anchor, attribution) {
