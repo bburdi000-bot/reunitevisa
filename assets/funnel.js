@@ -1,6 +1,7 @@
 (() => {
     const ATTRIBUTION_KEY = "rv_attribution_v1";
     const CTA_KEY = "rv_last_cta_v1";
+    const CUSTOMER_KEY = "rv_known_customer_v1";
     const TRACKED_QUERY_KEYS = [
         "utm_source",
         "utm_medium",
@@ -12,6 +13,20 @@
         "ref",
         "src"
     ];
+    const STRIPE_PRODUCT_MAP = {
+        "eVqfZa90F6La7SecHogbm09": "law_firm_starter_subscription",
+        "bJe8wI0u90mM0pMePwgbm0a": "law_firm_growth_subscription",
+        "4gMbIU5Ot6LaegC8r8gbm0b": "law_firm_setup",
+        "7sY14g4Kp8Ti3BY36Ogbm0n": "k1_filing_system",
+        "bJeaEQ3Gl3yYa0mcHogbm0l": "complete_document_checklist",
+        "4gM3coekZ2uU7Se22Kgbm0m": "interview_prep_guide",
+        "eVqdR24Kp6Lac8u0YGgbm01": "k1_visa_package_basic",
+        "bJe5kw0u9edC2xU36Ogbm02": "k1_visa_package_premium",
+        "28E9AMccR8Ti7Se9vcgbm03": "adjustment_of_status_basic",
+        "6oU7sE7WBfhGgoK6j0gbm04": "adjustment_of_status_premium",
+        "5kQcMY1ydb1qegC4aSgbm05": "interview_coaching_basic",
+        "9B6eV6a4J6LaegC9vcgbm06": "interview_coaching_premium"
+    };
 
     function safeRead(key) {
         try {
@@ -100,6 +115,52 @@
         return attribution;
     }
 
+    function sanitizeReferencePart(value, fallback = "na") {
+        const cleaned = String(value || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9_-]+/g, "_")
+            .replace(/^_+|_+$/g, "")
+            .slice(0, 40);
+
+        return cleaned || fallback;
+    }
+
+    function getKnownCustomer() {
+        return safeJsonParse(safeRead(CUSTOMER_KEY)) || {};
+    }
+
+    function storeKnownCustomer(form) {
+        const emailInput = form.querySelector('input[type="email"], input[name="email"], input[name="waitlist_email"]');
+        const firstNameInput =
+            form.querySelector('input[name="firstName"], input[name="first_name"], input[name="waitlist_name"]');
+        const countryInput =
+            form.querySelector('select[name="country"], select[name="beneficiary_country"], input[name="waitlist_country"], input[name="country"]');
+        const stageInput =
+            form.querySelector('select[name="case_stage"], select[name="waitlist_stage"]');
+
+        const email = emailInput ? String(emailInput.value || "").trim() : "";
+        const firstName = firstNameInput ? String(firstNameInput.value || "").trim() : "";
+        const country = countryInput ? String(countryInput.value || "").trim() : "";
+        const stage = stageInput ? String(stageInput.value || "").trim() : "";
+
+        if (!email) {
+            return;
+        }
+
+        safeWrite(
+            CUSTOMER_KEY,
+            JSON.stringify({
+                email,
+                first_name: firstName,
+                country,
+                stage,
+                captured_at: new Date().toISOString(),
+                source_page: window.location.pathname + window.location.search
+            })
+        );
+    }
+
     function setHiddenValue(form, name, value) {
         let input = form.querySelector(`input[name="${name}"]`);
 
@@ -157,8 +218,58 @@
         setHiddenValue(form, "last_cta_clicked_at", lastCta.clicked_at || "");
 
         form.addEventListener("submit", () => {
+            storeKnownCustomer(form);
             setHiddenValue(form, "submitted_at", new Date().toISOString());
         });
+    }
+
+    function getStripeProductSlug(anchor) {
+        if (anchor.dataset.productName) {
+            return sanitizeReferencePart(anchor.dataset.productName);
+        }
+
+        try {
+            const stripeUrl = new URL(anchor.href);
+            const productKey = stripeUrl.pathname.split("/").filter(Boolean).pop();
+            return STRIPE_PRODUCT_MAP[productKey] || sanitizeReferencePart(anchor.textContent, "stripe_product");
+        } catch (error) {
+            return sanitizeReferencePart(anchor.textContent, "stripe_product");
+        }
+    }
+
+    function buildClientReferenceId(attribution, productSlug) {
+        const visitorPart = sanitizeReferencePart((attribution.visitor_id || "").split("-").slice(-1)[0], "visitor");
+        const sourcePart = sanitizeReferencePart(attribution.first_touch && attribution.first_touch.source, "direct");
+        const campaignPart = sanitizeReferencePart(attribution.first_touch && attribution.first_touch.campaign, "site");
+        const pagePart = sanitizeReferencePart(window.location.pathname.replace(/\//g, "_"), "page");
+
+        return [visitorPart, productSlug, sourcePart, campaignPart, pagePart].join("_").slice(0, 200);
+    }
+
+    function rewriteStripeLink(anchor, attribution) {
+        try {
+            const stripeUrl = new URL(anchor.href);
+            const knownCustomer = getKnownCustomer();
+            const productSlug = getStripeProductSlug(anchor);
+
+            stripeUrl.searchParams.set("utm_source", attribution.first_touch.source || "direct");
+            stripeUrl.searchParams.set("utm_medium", attribution.first_touch.medium || "direct");
+
+            if (attribution.first_touch.campaign) {
+                stripeUrl.searchParams.set("utm_campaign", attribution.first_touch.campaign);
+            }
+
+            stripeUrl.searchParams.set("utm_content", productSlug);
+            stripeUrl.searchParams.set("client_reference_id", buildClientReferenceId(attribution, productSlug));
+
+            if (knownCustomer.email) {
+                stripeUrl.searchParams.set("prefilled_email", knownCustomer.email);
+            }
+
+            anchor.href = stripeUrl.toString();
+        } catch (error) {
+            // Ignore malformed links and leave the original href intact.
+        }
     }
 
     function captureCtaClick(anchor) {
@@ -211,8 +322,10 @@
     document.addEventListener("DOMContentLoaded", () => {
         const attribution = getAttribution();
         const forms = Array.from(document.querySelectorAll('form[action*="formsubmit.co"]'));
+        const stripeLinks = Array.from(document.querySelectorAll('a[href*="buy.stripe.com"]'));
 
         forms.forEach((form) => enrichForm(form, attribution));
+        stripeLinks.forEach((anchor) => rewriteStripeLink(anchor, attribution));
         initThankYouMessage();
     });
 })();
